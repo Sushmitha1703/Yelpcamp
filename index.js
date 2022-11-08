@@ -73,9 +73,9 @@ app.use((req,res,next)=>{
 
 const indexRouter=require('./routes/route')
 
-
-app.listen('8000',()=>{
-    console.log('listening on port 8000')
+const port= process.env.PORT || '8000'
+app.listen(port,()=>{
+    console.log(`listening on port ${port}`)
 })
 app.engine('ejs',ejsmate)
 app.set('view engine','ejs')
