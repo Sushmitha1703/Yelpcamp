@@ -73,12 +73,15 @@ app.use((req,res,next)=>{
 
 const indexRouter=require('./routes/route')
 
+app.engine('ejs',ejsmate)
+app.set('view engine','ejs')
+app.set('views',__dirname+'/views')
+app.use(favicon(__dirname + '/public/favicon.ico'))
+app.use('/public',express.static(__dirname+'/public'))
+app.use('/',indexRouter)
+
+
 const port= process.env.PORT || '8000'
 app.listen(port,()=>{
     console.log(`listening on port ${port}`)
 })
-app.engine('ejs',ejsmate)
-app.set('view engine','ejs')
-app.set('views',__dirname+'/views')
-app.use('/public',express.static(__dirname+'/public'))
-app.use('/',indexRouter)
