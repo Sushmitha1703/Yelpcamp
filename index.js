@@ -11,7 +11,7 @@ const flash=require('connect-flash')
 const passport =  require('passport')
 const user=require('./models/user')
 const Plocal =  require('passport-local')
-//const {MongoStore}= require('connect-mongo');
+const mongoSanitize= require('mongo-sanitize');
 const MongoStore = require('connect-mongo')
 const dbUrl= process.env.DB_URL || 'mongodb://localhost:27017/campground';
 //
@@ -25,6 +25,16 @@ db.on('error',console.log.bind(console,'connection error'))
 db.once('open',()=>{
     console.log('database connected')
 })
+
+
+app.engine('ejs',ejsmate)
+app.set('view engine','ejs')
+app.set('views',__dirname+'/views')
+app.use('/public',express.static(__dirname+'/public'))
+app.use(mongoSanitize({
+    replaceWith: '_'
+}))
+
 
 const secret= process.env.SECRET || 'thisisasecret'
 
@@ -62,9 +72,6 @@ passport.deserializeUser(user.deserializeUser())
 
 
 app.use((req,res,next)=>{
-   // if(!['/login','/'].includes(req.originalUrl)){
-    //    req.session.returnTo= req.originalUrl
-   // }
     res.locals.currentUser= req.user
     res.locals.success = req.flash('success')
     res.locals.error=req.flash('error')
@@ -72,13 +79,8 @@ app.use((req,res,next)=>{
 })
 
 const indexRouter=require('./routes/route')
-
-app.engine('ejs',ejsmate)
-app.set('view engine','ejs')
-app.set('views',__dirname+'/views')
-app.use(favicon(__dirname + '/public/favicon.ico'))
-app.use('/public',express.static(__dirname+'/public'))
 app.use('/',indexRouter)
+
 
 
 const port= process.env.PORT || '8000'
