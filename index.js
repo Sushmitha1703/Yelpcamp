@@ -11,7 +11,6 @@ const flash=require('connect-flash')
 const passport =  require('passport')
 const user=require('./models/user')
 const Plocal =  require('passport-local')
-const mongoSanitize= require('mongo-sanitize');
 const MongoStore = require('connect-mongo')
 const dbUrl= process.env.DB_URL || 'mongodb://localhost:27017/campground';
 //
@@ -31,9 +30,6 @@ app.engine('ejs',ejsmate)
 app.set('view engine','ejs')
 app.set('views',__dirname+'/views')
 app.use('/public',express.static(__dirname+'/public'))
-app.use(mongoSanitize({
-    replaceWith: '_'
-}))
 
 
 const secret= process.env.SECRET || 'thisisasecret'
@@ -77,6 +73,11 @@ app.use((req,res,next)=>{
     res.locals.error=req.flash('error')
     next();
 })
+
+app.get('/favicon.ico', function(req, res) { 
+    res.status(204);
+    res.end();    
+});
 
 const indexRouter=require('./routes/route')
 app.use('/',indexRouter)
