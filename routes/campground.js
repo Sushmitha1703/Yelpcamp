@@ -24,56 +24,20 @@ router.use(bodyParser.urlencoded({ extended: true }))
 router.use(bodyParser.json())
 
 
-router.get('/',(req,res)=>{
-    res.render('home.ejs')
-})
-
-
-router.route('/campground')
+router.route('/')
     .get(catchasync(campgrounds.index))
     .post(upload.array('images'),validatedata,catchasync(campgrounds.postnewcamp))
 
 
-router.get('/campground/new',loggedin,catchasync(campgrounds.newform))
+router.get('/new',loggedin,catchasync(campgrounds.newform))
 
-router.route('/campground/:id')
+router.route('/:id')
       .get(catchasync(campgrounds.showcamp))
       .put(isauthor,upload.array('images'),catchasync(campgrounds.update))
       .delete(isauthor,catchasync(campgrounds.delete))
 
-router.get('/campground/:id/edit',isauthor,catchasync(campgrounds.editform))
+
+router.get('/:id/edit',isauthor,catchasync(campgrounds.editform))
 
 
-router.post('/campground/:id/reviews',validatereview,catchasync(reviewsController.create))
-
-
-router.delete('/campground/:id/reviews/:reviewId',isreviewauthor,catchasync(reviewsController.delete))
- 
-//---------------------------------USER----------------------------
-
-router.route('/register')
-     .get(catchasync(userController.register))
-     .post(catchasync(userController.postregister));
-
-router.route('/login')
-     .get(catchasync(userController.loginpage))
-     .post(passport.authenticate('local',{failureFlash:true, failureRedirect:'/login',keepSessionInfo:true}),catchasync(userController.login))
-
-router.get('/logout',catchasync(userController.logout))
-
-//------------------------------ERROR----------------------------------
-
-router.all('*',(req,res,next)=>{
-    next(new catchexpress('page not found',404))
-})
-
-router.use((err,req,res,next)=>{
-  const { message='something went wrong',Statuscode=500}=err
-  res.status(Statuscode).render('error',{err})
-})
-
-
-module.exports=router
-
-
-//POST campground/:id/review
+module.exports = router
