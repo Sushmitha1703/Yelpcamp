@@ -12,6 +12,7 @@ const passport =  require('passport')
 const user=require('./models/user')
 const Plocal =  require('passport-local')
 const MongoStore = require('connect-mongo')
+const favicon= require('serve-favicon')
 const dbUrl= process.env.DB_URL || 'mongodb://localhost:27017/campground';
 //
 mongoose.connect(dbUrl,{
@@ -29,6 +30,7 @@ db.once('open',()=>{
 app.engine('ejs',ejsmate)
 app.set('view engine','ejs')
 app.set('views',__dirname+'/views')
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use('/public',express.static(__dirname+'/public'))
 
 
@@ -74,14 +76,8 @@ app.use((req,res,next)=>{
     next();
 })
 
-app.get('/favicon.ico', function(req, res) { 
-    res.status(204);
-    res.end();    
-});
-
 const indexRouter=require('./routes/route')
 app.use('/',indexRouter)
-
 
 
 const port= process.env.PORT || '8000'

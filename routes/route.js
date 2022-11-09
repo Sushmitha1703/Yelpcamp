@@ -28,6 +28,7 @@ router.get('/',(req,res)=>{
     res.render('home.ejs')
 })
 
+
 router.route('/campground')
     .get(catchasync(campgrounds.index))
     .post(upload.array('images'),validatedata,catchasync(campgrounds.postnewcamp))
