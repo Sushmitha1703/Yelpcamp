@@ -30,7 +30,7 @@ db.once('open',()=>{
 app.engine('ejs',ejsmate)
 app.set('view engine','ejs')
 app.set('views',__dirname+'/views')
-app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use('/public',express.static(__dirname+'/public'))
 
 
